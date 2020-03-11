@@ -4,6 +4,7 @@ const bodyParser= require('body-parser');
 const users= require('./routes/api/users');
 const profile= require('./routes/api/profile');
 const posts= require('./routes/api/posts');
+const passport=require('passport');
 const app= express();
 
 //Body parser middleware or (function)
@@ -11,6 +12,13 @@ const app= express();
 //bodyparser has so many functions..we want only json conversion..so using json()
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+
+//passport middleware
+
+app.use(passport.initialize());
+
+//passportconfig
+require('./config/passport')(passport)
 
 //Db config
 const db= require('./config/keys').mongoURI;
@@ -30,4 +38,4 @@ app.use('/api/profile',profile);
 app.use('/api/posts', posts);
 
 const port = 8020;
-app.listen(port,()=> console.log(`server running in ${port}`))
+app.listen(port,()=> console.log(`server running in ${port}`));
