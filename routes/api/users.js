@@ -7,6 +7,8 @@ const keys = require('../../config/keys');
 const passport = require('passport');
 //this is the passport lib
 const router= express.Router();
+const validateRegisterInput= require('../../validation/register');
+const validateLoginInput= require('../../validation/login');
 // we are creating a instance of express called as router and calling the Router feature of express only to use in this user.js file..rather than creating a whole express instance like we did in the server.js file.
 
 //the below lines were used for testing the routes.
@@ -21,11 +23,22 @@ const router= express.Router();
 // @access  Public
 
 router.post('/register',(req,res) => {
-  console.log("register checking for " + req.body.email);
-  console.log("register User is "+ JSON.stringify(User));
+
+  const {errors,isValid}=validateRegisterInput(req.body);
+
+  if(!isValid){
+    return res.json(errors);
+  }
+
+  //we are storing the obj getting back from validate func in to a object in which the parameters are errors and isvalid..so the return obj will get mapped respectively refer video date -(mar 3)
+  // console.log("register checking for " + req.body.email);
+  // console.log("register User is "+ JSON.stringify(User));
+
 User.findOne({email:req.body.email})
+
 //here User is the representaion of users collection..so we are checking if the entered email is already present or not
 //from the above stmt..we are storing the result either (user found or null value ) in to a variable user and validating based on the results.
+
 .then(user => {
   if(user){
     //wherever we are writing the elaborate fun in callback we have to use return
@@ -74,8 +87,15 @@ User.findOne({email:req.body.email})
 //then we are storing the fetched info in user variable and processing it
 router.post('/login',(req,res) =>
 {
-   console.log("checking for " + req.body.email);
-   console.log("User is "+ JSON.stringify(User));
+  const {errors,isValid}=validateLoginInput(req.body);
+
+  if(!isValid){
+    return res.json(errors);
+  }
+
+  //  console.log("checking for " + req.body.email);
+  //  console.log("User is "+ JSON.stringify(User));
+
   User.findOne({email:req.body.email})
   .then(user => {
     //if the user is not found
@@ -135,6 +155,8 @@ router.get(
   '/current' ,
   //we do not want our session to be carry forward in to any other site.
   //we can set it to true too..later if we want
+  // the done parameter is used to transfer the user obj to the callback here
+  //for every private route..we need to use this passport.authnticate layer in between.
   passport.authenticate('jwt' , {session:false}) ,
   (req,res)=> {
      res.json({
