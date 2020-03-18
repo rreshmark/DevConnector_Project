@@ -30,7 +30,9 @@ if (isEmpty(data.password)) {
 
 return {
   errors,
-  isValid: isEmpty(errors) //the result of this func is boolean type
+  isValid: isEmpty(errors) //the result of this func is boolean type refer (video 3/7)
+  //this boolean is to check if there are errors or not..if true..errors are there else not there
+  //to create this boolean ..we need to check if the errors is empty or not..but here the errors is an empty object from beginning..so to do that we are creating a sepearate fun called is-empty and checking wat are the possible ways of 
 }
 
 }
