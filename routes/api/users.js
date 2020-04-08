@@ -27,7 +27,7 @@ router.post('/register',(req,res) => {
   const {errors,isValid}=validateRegisterInput(req.body);
 
   if(!isValid){
-    return res.json(errors);
+    return res.status(400).json(errors);
   }
 
   //we are storing the obj getting back from validate func in to a object in which the parameters are errors and isvalid..so the return obj will get mapped respectively refer video date -(mar 3)
@@ -87,10 +87,9 @@ User.findOne({email:req.body.email})
 //then we are storing the fetched info in user variable and processing it
 router.post('/login',(req,res) =>
 {
-  const {errors,isValid}=validateLoginInput(req.body);
-
+  const {errors,isValid}=validateLoginInput(req.body)
   if(!isValid){
-    return res.json(errors);
+    return res.status(400).json(errors);
   }
 
   //  console.log("checking for " + req.body.email);

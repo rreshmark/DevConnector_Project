@@ -20,11 +20,11 @@ const validatePostInput = require('../../validation/post');
 router.get('/',(req,res) =>
 {
   //find will fetch 0 or more records
-  //sortiing the posts with help of the dates field in posts model in descending order..so that latest post in on top view
-  this.post.find()
-  .sort({date:-1})
-  .then(posts => res.json(posts))
-  .catch(err => res.status(404).json({nopostsfound:'No posts Found'}));
+  //sorting the posts with help of the dates field in posts model in descending order i.e (-1)..so that latest post in on top view
+  Post.find()
+    .sort({ date: -1 })
+    .then(posts => res.json(posts))
+    .catch(err => res.status(404).json({ nopostsfound: 'No posts found' }));
 });
 
 // @route   GET api/posts/:id
@@ -47,7 +47,7 @@ router.get('/:id',(req,res) => {
 router.post('/',
 passport.authenticate("jwt",{session:false})
 , (req,res) =>{
-const {erros,isValid} = validatePostInput(re.body);
+const {errors,isValid} = validatePostInput(req.body);
 
 // check validation
 if(!isValid){
@@ -128,9 +128,7 @@ passport.authenticate("jwt",{session:false})
   });
 }
 );
-// @route   POST api/posts/unlike/:id
-// @desc    Unlike post
-// @access  Private
+ 
 router.post('/unlike/:id',
 passport.authenticate("jwt",{session:false})
 ,(req,res) => {
@@ -201,31 +199,39 @@ post.save()
 // @access  Private
 //:id is the post id and :comment_id is the unique id assignmed to the comment by mongodb
  
-router.delete('/comment/:id/:comment_id',
-passport.authenticate("jwt",{session:false})
-,(req,res) => {
-  Post.findById(req.params.id)
-  .then(post => {
-    //the reason we are using tostring() in many places because the parameters which is used gets converted to string automaically..so to compare the two .. we are converting the id in the comments field from db to string
+router.delete(
+  '/comment/:id/:comment_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Post.findById(req.params.id)
+      .then(post => {
+        // Check to see if comment exists
+        //the reason we are using tostring() in many places because the parameters which is used gets converted to string automaically..so to compare the two .. we are converting the id in the comments field from db to string
     // filter acts like a "where"vfor  each comment check if the id are matching
-    if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id)
-    .length === 0
-    ){
-      return res.status(404).json({commentnotexists:'comment does not exists'});
-    }
-    //if comment is found then delete it
-//the same reason as above for using the tosting() here..
-    const removeIndex= post.comments.map(item => item._id.toString())
-    .indexOf(req.params.comment_id);
+        if (
+          post.comments.filter(
+            comment => comment._id.toString() === req.params.comment_id
+          ).length === 0
+        ) {
+          return res
+            .status(404)
+            .json({ commentnotexists: 'Comment does not exist' });
+        }
 
-    //splice comment out of array
-    post.comments.splice(removeIndex,1);
+        // Get remove index
+         //if comment is found then delete it
+//the same reason as above for using the tostring() here..
+        const removeIndex = post.comments
+          .map(item => item._id.toString())
+          .indexOf(req.params.comment_id);
 
-    post.save()
-    .then(post => res.json(post));
-  })
-  .catch(err => res.status(404).json({postnotfound:'No post found'}));
-}
+        // Splice comment out of array
+        post.comments.splice(removeIndex, 1);
+
+        post.save().then(post => res.json(post));
+      })
+      .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
+  }
 );
 
 
