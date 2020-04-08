@@ -1,6 +1,9 @@
 //this file is going to fire all the dispatch calls
 import {SET_CURRENT_USER, GET_ERRORS} from './types';
 import axios from 'axios';
+import setAuthToken from '../utils/setAuthToken';
+import jwt_decode from 'jwt-decode';
+//jwt_decode is used for decoding token in react
 
 //register user action
 //new way of writing functions ..old way is written in reducer file
@@ -39,8 +42,21 @@ dispatch => {
   axios
   .post('/api/users/login',userData)
   .then(res =>{
+    //the res will be having token after returning from api..so we are storin git in const token for using it 
+    //deconstruction 
+    const {token} = res.data;
     //save to localstorage
     // set token to axios auth header
+    setAuthToken(token);
+    
+    //Decode the token to get the user data
+    //jwt_decode class is used to decode the token and we are storing a obj in decoded which has id,name,avatar
+       const decoded = jwt_decode(token);
+    //Dispatch the set_current_user
+    dispatch({
+      type:SET_CURRENT_USER,
+      payload:decoded
+    })
   }
     )
   .catch(err =>

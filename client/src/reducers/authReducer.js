@@ -1,6 +1,7 @@
 //this reducer is going to handle auth related data to write it in store
 //what data do i want my reducer to wite in to the store
 import {SET_CURRENT_USER} from '../actions/types';
+import isEmpty from '../validation/is-empty';
 //when the application starts..the app.js starts all the reducer function
 const initialState={
   //the initialstate is going to write the below mentioned info in store
@@ -20,6 +21,8 @@ case SET_CURRENT_USER:
   return {
         //spreading the state and making a copy of the state and overriding the user part  from the dispatch call with payload info  that user has entered
          ...state,
+         //if payload is not empty then authentcated should be true
+         isAuthenticated : !isEmpty(action.payload),
          user:action.payload
      }
     default:
