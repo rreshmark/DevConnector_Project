@@ -18,10 +18,12 @@ export default function(state = initialState,action){
   switch(action.type){
     //receiving end of set-current-user [ dispatch even called as (action) ] call
 case SET_CURRENT_USER:
+  //reducer is a function that returns the data which is written into the store
+//return statement inside a reducer means it is writing the data to the redux store
   return {
         //spreading the state and making a copy of the state and overriding the user part  from the dispatch call with payload info  that user has entered
          ...state,
-         //if payload is not empty then authentcated should be true
+         //if payload is not empty then authenticated should be true
          isAuthenticated : !isEmpty(action.payload),
          user:action.payload
      }

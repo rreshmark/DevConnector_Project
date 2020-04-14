@@ -1,4 +1,4 @@
-//job of thi file is to write the token given to it to the auth header and if no token given,it has to remove from auth header
+//job of this file is to write the token given to it to the auth header and if no token given,it has to remove from auth header
 
 import axios from 'axios';
 

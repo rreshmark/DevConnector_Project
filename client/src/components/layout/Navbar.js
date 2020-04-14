@@ -1,10 +1,28 @@
 //refer (3/21) 54:00 for brief explanation 
 import React, { Component } from 'react';
+import {connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import {logoutUser} from '../../actions/authActions';
 import {Link} from 'react-router-dom';
 //the reason we are using this link because href reloads the whole page rather loading only only the required componrnt..which rings performannt issues.
 
  class Navbar extends Component {
   render() {
+    const {isAuthenticated,user} = this.props.auth;
+
+    //when the use is not logged in
+    const guestLinks=(<ul className="navbar-nav ml-auto">
+    <li className="nav-item">
+      <Link className="nav-link" to="/register">
+        Sign Up
+              </Link>
+    </li>
+    <li className="nav-item">
+      <Link className="nav-link" to="/login">
+        Login
+              </Link>
+    </li>
+  </ul>);
     return (
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
     <div className="container">
@@ -21,18 +39,19 @@ import {Link} from 'react-router-dom';
           </li>
         </ul>
 
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item">
-            <Link className="nav-link" to="/register">Sign Up</Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/login">Login</Link>
-          </li>
-        </ul>
       </div>
     </div>
   </nav>
     )
   }
 }
-export default Navbar;
+Navbar.propTypes={
+  logoutUser:PropTypes.func.isRequired,
+  auth:PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state) => ({
+  auth: state.auth
+});
+
+export default connect (mapStateToProps,{logoutUser})(Navbar);

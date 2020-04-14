@@ -63,16 +63,17 @@ onSubmit(e) {
       //props is a global property of component as we are inheriting from the base class and down we have connected the register component to talk to redux store..we have inserted that registeruser action inside the props..
       //refer video 4/4 37:00
       //newUser is going to be stored as userData payload info  in to store.
-      //anything thatu put in to or get back from the redux store.. it goes in to the props bag
+      //anything that u put in to or get back from the redux store.. it goes in to the props bag
       //propsbag already has history object in it
       this.props.registerUser(newUser,this.props.history)
 }
 
 //this is one of the lifecycle stages that will get triggered on the component when the new data arrives from the redux store
 //mapstatetoprops func will get the new data from the redux store and as soon as the new data comes in the component this lifecylce stage gets triggered.
-//refer video 4/5 30:45
+//refer video 4/5 30:45 to 34:00
  componentWillReceiveProps(nextProps){
    if(nextProps.errors){
+     //we are writing the errors again in the localstate
      this.setState({errors:nextProps.errors})
    }
  }
@@ -166,14 +167,15 @@ Register.propTypes ={
   errors:PropTypes.object.isRequired
   //even the errors is empty..we are checking atleast it is present in redux store
 }
-//from the redux store the data is mapped from state to props bag and in the state parameter the newly entered redux data is present from that we want the auth info and stroing it a var called auth that we are creating in the props bag 
+//from the redux store the data is mapped from state to props bag and in the state parameter the newly entered redux data is present from that we want the auth info and storing it a var called auth that we are creating in the props bag 
   //refer video 4/4 1:2:44
   const mapStateToProps = (state) =>({
     auth : state.auth,
     errors:state.errors
   });
 
-//we are enabling connect feture to the register component to talk to the redux store and saying the register component that it can fire the action called registeruser
-//refer  video 4/4 35:00
-//anything thatu put in to or get back from the redux store.. it goes in to the props bag
 export default connect(mapStateToProps,{registerUser}) (Register);
+//we are enabling connect feature to the register component to talk to the redux store and saying the register component that it can fire the action called registeruser
+//connecting ui with the action using(registerUser) and redux store with the ui using(mapStatetoProps)
+//refer  video 4/4 35:00
+//anything that u put in to or get back from the redux store.. it goes via the props bag

@@ -120,7 +120,7 @@ router.post('/login',(req,res) =>
            //here the "token" is the generated token from jwt
            console.log("payload for signing "+ JSON.stringify(payload));
           jwt.sign(payload,keys.secretOrkey,
-           {expiresIn:3600},
+           {expiresIn:300},
            (err,token) =>
            {
              res.json({
