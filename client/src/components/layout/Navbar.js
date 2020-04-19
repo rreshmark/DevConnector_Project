@@ -7,6 +7,11 @@ import {Link} from 'react-router-dom';
 //the reason we are using this link because href reloads the whole page rather loading only only the required componrnt..which rings performannt issues.
 
  class Navbar extends Component {
+ onLogoutClick(e){
+   e.preventDefault();
+   this.props.logoutUser();
+ }
+
   render() {
     const {isAuthenticated,user} = this.props.auth;
 
@@ -23,6 +28,32 @@ import {Link} from 'react-router-dom';
               </Link>
     </li>
   </ul>);
+  //when the user is logged in 
+  const authLinks= (<ul className="navbar-nav ml-auto">
+  <li className="nav-item">
+    <Link className="nav-link" to="/feed">
+      Post Feed
+    </Link>
+  </li>
+  <li className="nav-item">
+    <Link className="nav-link" to="/dashboard">
+      Dashboard
+    </Link>
+  </li>
+  <li className="nav-item">
+    <a href="" onClick={this.onLogoutClick.bind(this)}
+    className="nav-link">
+      <img
+        className="rounded-circle"
+        src={user.avatar}
+        alt={user.name}
+        style={{width: '25px', marginRight: '5px'}}
+        title="You must have a gravatar connected to your email to display an image"
+        />
+      Logout
+    </a>
+  </li>
+</ul>);
     return (
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
     <div className="container">
@@ -38,12 +69,13 @@ import {Link} from 'react-router-dom';
             </Link>
           </li>
         </ul>
-
+        {isAuthenticated ? authLinks : guestLinks}
       </div>
     </div>
   </nav>
     )
   }
+  //we are binding in such a way that if isAuthenticated is present it will the html content of authlinks else html content of guestlinks//real time when user clicks the logout button//the binding is responsible to show the relevant data in the navbar
 }
 Navbar.propTypes={
   logoutUser:PropTypes.func.isRequired,

@@ -78,7 +78,7 @@ export const logoutUser =() => dispatch =>{
   //as we are setting the payload empty//when it goes to the authreducer as the payload is empty,the isauthenticated will set to false and empty payload is written
   dispatch({
     type:SET_CURRENT_USER,
-    patload:{}
+    payload:{}
   })
 
 }
